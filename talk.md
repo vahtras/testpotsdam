@@ -1,6 +1,6 @@
 # Version Control: git
 
-## First Last
+## Olav Vahtras
 
 Leiden Workshop 2015-04-13
 
