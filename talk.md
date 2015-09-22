@@ -2,7 +2,9 @@
 
 ## Olav Vahtras
 
-Leiden Workshop 2015-04-13
+### KTH Royal Institute of Technology
+
+Software Carpentry Workshop Potsdam 2015-04-13
 
 ---
 
@@ -30,7 +32,7 @@ layout: false
 ## What is version control:
 -
 
-* A Version Control System (VCS) is a frame works that tracks the history of a project
+* A Version Control System (VCS) is a framework that tracks the history of a project
 
 * The history of a project is a sequence of versions
 ```
@@ -71,35 +73,11 @@ $ cp -r Project Project.save.v2.new
 
 * A file-level local version control system
 
-```bash
-$ date > latest_update.txt
-
-$ ci latest_update.txt
-latest_update.txt,v  <--  latest_update.txt
-enter description, terminated with single '.' or end of file:
-NOTE: This is NOT the log message!
->> .
-initial revision: 1.1
-done
-
-$ ls -l
--r--r--r-- 1 olav olav 207 Apr 13 05:24 latest_update.txt,v
-
-$ co -l ./latest_update.txt 
-./latest_update.txt,v  -->  ./latest_update.txt
-revision 1.1 (locked)
-done
-
-$ date > latest_update.txt
-
-$ ci ./latest_update.txt 
-./latest_update.txt,v  <--  ./latest_update.txt
-new revision: 1.2; previous revision: 1.1
-enter log message, terminated with single '.' or end of file:
->> .
-
-```
 * Can be used by multiple collaborators on a shared file system
+
+* One user at a time can edit
+
+* Not possible for multi-file projects as each file has its own history.
 
 ---
 ## Version control systems of the past
@@ -122,7 +100,7 @@ enter log message, terminated with single '.' or end of file:
 
 * When a user checks out a project a local reference is maintained
 
-* Development branches are possible (main called trunk)
+* Development branches are possible
 
 * Merging branches
 
@@ -156,7 +134,7 @@ enter log message, terminated with single '.' or end of file:
 
 * In collaborative projects
 
-`Practically always`
+*Practically always*
 
 #### Benefits
 
@@ -187,9 +165,11 @@ Creates a configuration file ``~/.gitconfig``
 ```
 *Note*:    You can create and edit the file directly
 
+**Exercise:** Make sure you have git installed and you have this initial setup.
+
 ---
 
-### Initializing a repository
+### Initializing a repository: `git init`
 
 * Use an existing directory or create a new project directory
 ```
@@ -217,18 +197,19 @@ Creates a configuration file ``~/.gitconfig``
 
 ---
 
-### Adding files
+### Adding files: `git add`
 
-* Create a new file
+* Create a file with one line
 ```
-    $ cat << EOF > hello.py
-    print "Hello world!"
-    EOF
+    #hello.py
+    print("Hello world!")
+```
+```bash
     $ python hello.py
     Hello world!
 ```
 * Recheck status
-```
+```bash
     $ git status
     On branch master
 
@@ -241,17 +222,15 @@ Creates a configuration file ``~/.gitconfig``
 
     nothing added to commit but untracked files present (use "git add" to track)
 ```
+* Git warns about files in the project directory that not tracked
 
 ---
 
-
-### Untracked files
----------------
-
-* ``git`` warns about files in the project directory that Git is not keeping track of
-* To tell git to do so
-```
+* Tell Git to start tracking 
+```bash
     $ git add hello.py
+```
+```bash
     $ git status
     On branch master
 
@@ -262,12 +241,15 @@ Creates a configuration file ``~/.gitconfig``
 
 	    new file:   hello.py
 ```
+* It is now a tracked file
+* It is not yet in the repository
 
----
 
 ### The staging area
 * After an add operation a file is in the staging area (cache)
 * This is an intermediate level between the work directory and repository
+
+---
 
 ### The repository
 * Save the latest changes in the local repository (``.git`` directory)
@@ -283,6 +265,29 @@ Creates a configuration file ``~/.gitconfig``
     On branch master
     nothing to commit, working directory clean
 ```
+* Check history
+```bash
+$ git log
+commit 8b56bb1755d6d8f2bb54cdb6c672b6f47196de1f
+Author: Olav Vahtras <vahtras@kth.se>
+Date:   Wed Aug 23 10:11:16 2015 +0200
+
+    First hello
+```
+---
+
+### Summary of five basic Git commands
+
+#### operations
+
+* `init` create a repository
+* `add`  add new file
+* `commit` save in repo
+
+#### inquires
+
+* `status`: inquire state of directory
+* `log`: inquire history of direct
 
 ---
 
@@ -312,34 +317,23 @@ A single file may be represented att all levels
 
 The basic work cycle is edit-add-commit
 ```
-    $ vim <file> #edit
+    $ nano <file> #edit a file
     $ git add <file> #adds new file or saves latest changes
     $ git commit -m <message> <file> #save permanently in repository
 ```
 
 ---
 
-### Review history
+### Viewing changes: `git diff`
 
-To see the commit history of the project files
-```
-    $ git log
-    commit edf197e2974f9365abe3a52e6bde5ae0495d5016
-    Author: First Last <first.last@isp.com>
-    Date:   Thu Oct 16 17:32:45 2014 +0200
+* Change the file
 
-	First hello
 ```
+    # hello.py
+    print("Hello there world!")
+```
+* and Git recognizes this file as modified
 
-### Viewing changes
-
-* Consdier a modified file
-```
-    $ cat << EOF > hello.py
-    print "Hello there world!"
-    EOF
-```
-* git now recognizes this tracked file as modified
 ```
     $ git status
     On branch master
@@ -352,7 +346,8 @@ To see the commit history of the project files
     no changes added to commit (use "git add" and/or "git commit -a")
 ```
 
-### Viewing changes
+---
+
 ```
     $ git diff
     diff --git a/hello.py b/hello.py
@@ -366,9 +361,9 @@ To see the commit history of the project files
 
 ```
     $ git difftool
-
-.. figure:: _static/git_difftool.png
 ```
+
+<img src="git_difftool.png" style="width: 700px;"/>
 
 ---
 
@@ -614,7 +609,7 @@ work directory     <- init, clone
 
 * Locally: edit-add-commit
 ```
-    $ vim ...
+    $ nano ...
     $ git add...
     $ git commit...
 ```
@@ -631,6 +626,22 @@ work directory     <- init, clone
 * github.com (free for public projects)
 
 * gitlab.com  (free for public and private projects)
+
+---
+
+### Github workflow exercise
+
+1. Create account
+2. Create a repository on github with the name `hello`
+3. In your local repository add the github repository as a remote
+4. Push your local project to github
+5. Fork the repository of your neighbor to the left
+7. Add the neighbours repository as a remote
+6. Add the line 'print("Hello neighbor!") to hello.py
+9. Push to your own github
+10. Make a pull request
+
+---
 
 ### Links
 
